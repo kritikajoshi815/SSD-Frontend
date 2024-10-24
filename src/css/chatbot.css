@@ -1,0 +1,205 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Prevent any scrolling */
+}
+
+.chatbot-app {
+  display: flex;
+  height: 100vh; /* Full viewport height */
+  width: 100vw; /* Full viewport width */
+}
+
+.side-panel {
+  width: 300px; /* Fixed width for the side panel */
+  background-color: #f7f7f7;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto; /* Allows vertical scrolling if content overflows */
+}
+
+.side-panel h3 {
+  margin-bottom: 10px;
+}
+
+.conversation-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10;
+}
+
+.conversation-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
+  transition: background-color 0.3s;
+}
+
+.conversation-item:hover {
+  background-color: #f1f1f1;
+}
+
+.conversation-item.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.save-button {
+  margin-top: 10px;
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.chatbox-container {
+  flex: 1; /* Takes remaining space next to the side panel */
+  display: flex;
+  flex-direction: column;
+  max-width: calc(
+    100vw - 300px
+  ); /* Width of chatbox area fixed by subtracting side panel width */
+}
+
+.chat-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+}
+
+.conversation-name-input {
+  padding: 5px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+}
+
+.user-id {
+  margin-right: 50px;
+  font-size: 16px;
+}
+
+.chatbox {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  background-color: white;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto; /* Allows vertical scrolling for messages */
+  padding: 20px;
+}
+
+.message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 80%; /* Message box takes up to 80% of the container width */
+  word-wrap: break-word; /* Break long words if needed */
+  white-space: pre-wrap; /* Preserve line breaks and wrap text automatically */
+  overflow-wrap: break-word; /* Ensure proper word wrapping */
+}
+
+.message.user {
+  background-color: #007bff;
+  color: white;
+  align-self: flex-end;
+  max-width: 50%; /* Ensure user messages don't exceed half of the chatbox width */
+  margin-left: auto; /* Shift the message fully to the right */
+  margin-right: 0; /* Remove any right margin */
+  padding: 10px;
+  border-radius: 10px;
+  word-wrap: break-word; /* Ensure long words wrap */
+  white-space: pre-wrap; /* Keep line breaks */
+  overflow-wrap: break-word; /* Break long words */
+}
+
+.message.bot {
+  background-color: #e9ecef;
+  color: #333;
+  align-self: flex-start;
+  max-width: 50%; /* Ensure bot messages don't exceed half of the chatbox width */
+}
+
+.input-container {
+  display: flex;
+  padding: 10px;
+  background-color: #f1f1f1;
+}
+
+.input-field {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.send-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+.send-button:hover {
+  background-color: #0056b3;
+}
+
+.summary-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.summary-button,
+.accept-button,
+.reject-button {
+  padding: 10px 15px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.summary-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.accept-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.reject-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.summary-button:hover,
+.accept-button:hover,
+.reject-button:hover {
+  opacity: 0.8;
+}
