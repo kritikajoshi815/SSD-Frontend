@@ -62,7 +62,7 @@ function CodeEditor() {
     } catch (error) {
       const errorMessage = error.message;
       const errorLine = findErrorLine(text, errorMessage);
-      setJsonError(`JSON Error: ${errorMessage} at line ${errorLine}`);
+      setJsonError(`JSON Error: ${errorMessage}`);
     }
   };
 
@@ -147,6 +147,9 @@ function CodeEditor() {
       <div className="select-section">
         <label htmlFor="fileSelect" className="label">
           Select Metamodel:
+        </label>
+        <label htmlFor="fileSelect" className="custom-file-label">
+          Choose File
         </label>
         <input
           type="file"

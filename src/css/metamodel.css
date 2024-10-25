@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
 /* General container styling */
 .container {
   width: 100vw; /* Full viewport width */
@@ -14,6 +16,7 @@ h1 {
   text-align: center;
   color: white; /* Dark blue color */
   margin-bottom: 20px;
+  font-family: Poppins;
 }
 
 /* Label styling */
@@ -22,6 +25,7 @@ h1 {
   font-weight: bold;
   margin-bottom: 5px;
   color: white; /* Darker grey for better contrast */
+  font-family: Poppins;
 }
 
 /* Dropdown styling */
@@ -33,13 +37,15 @@ h1 {
   border-radius: 4px;
   margin-bottom: 20px;
   outline: none;
-  background-color: #ffffff; /* White background */
+  background-color: black; /* White background */
+  color: white;
+  font-family: Poppins;
 }
 
 /* Code editor styling */
 .code-editor {
   width: 97%;
-  height: 500px;
+  height: 450px;
   padding: 10px;
   font-family: "Courier New", monospace;
   font-size: 14px;
@@ -48,6 +54,8 @@ h1 {
   border-radius: 4px;
   resize: none;
   margin-bottom: 20px;
+  color: white;
+  font-family: Poppins;
 }
 .code-editor:focus {
   border: 2px solid white; /* Yellow border on focus */
@@ -77,8 +85,12 @@ h1 {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 20px;
-  float: right; /* Float the button to the right */
+  margin-top: -37px; /* Shift button up by reducing the margin */
+  float: right;
+  position: relative;
+  margin-right: 50px;
+  top: -10px; /* Adjust this value as needed */
+  font-family: Poppins;
 }
 
 .upload-button:disabled {
@@ -108,5 +120,41 @@ select:focus {
 .error-message {
   color: red;
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 0px;
+  font-family: Poppins;
+}
+
+.select-section {
+  margin-top: 5px;
+}
+
+.label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: white;
+  font-family: Poppins;
+}
+
+/* Style for the custom file input button */
+.custom-file-label {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #007bff; /* Blue background */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer;
+  text-align: center;
+  margin-top: 0px;
+  font-family: Poppins;
+}
+
+.custom-file-label:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Hide the default file input */
+#fileSelect {
+  display: none;
 }
