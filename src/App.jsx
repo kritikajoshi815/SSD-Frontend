@@ -3,6 +3,7 @@ import Login from "./components/Login";
 import ChatBot from "./components/ChatBot";
 import MetaModel from "./components/MetaModel";
 import React, { useState, useEffect } from 'react';
+import Home from "./components/Home";
 // import Login from "./components/Login";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -51,7 +52,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login onLogin={handleLogin}/>} />
+        <Route path="/" element={isAuthenticated?<Home onLogout={handleLogin}/>:<Login onLogin={handleLogin}/>} />
         <Route path="/chatbot" element={<ChatBot />} />
         <Route path="/metamodel" element={<MetaModel />} />
       </Routes>

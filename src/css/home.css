@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .MuiDrawer-paper {
+    transition: background-color 0.3s ease;
+  }
+  
+  button, input {
+    color: #b3b3cc !important;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #28a745 !important;
+  }
+  
+  .card {
+    transition: background-color 0.3s ease;
+  }
+  

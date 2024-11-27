@@ -22,7 +22,6 @@ html {
 .side-panel {
   width: 300px;
   background-color: rgb(34, 34, 34); /* Set background color to yellow */
-  /* border-right: 1px solid #ddd; */
   padding: 20px;
   box-sizing: border-box;
   overflow-y: auto; /* Allows vertical scrolling if content overflows */
@@ -97,15 +96,15 @@ html {
   margin-bottom: 10px;
 }
 
-.conversation-name-input {
+/* .conversation-name-input {
   padding: 5px;
   font-size: 16px;
-  border: 1px solid white; /* Yellow border */
-  border-radius: 30px; /* Keep the rounded corners */
-  background-color: rgb(51, 50, 50); /* Red background color */
-  color: white; /* Optional: Change text color for contrast */
+  border: 1px solid white; // Yellow border 
+  border-radius: 30px; ///* Keep the rounded corners 
+  background-color: rgb(51, 50, 50); // /* Red background color 
+  color: white; ///* Optional: Change text color for contrast 
   font-family: Poppins;
-}
+} */
 
 .user-id {
   margin-right: 50px;
@@ -156,7 +155,7 @@ html {
   font-family: Poppins;
 }
 
-.message.bot {
+.message.model {
   background-color: rgb(34, 34, 34);
   color: white;
   align-self: flex-start;
@@ -243,4 +242,82 @@ html {
 .accept-button:hover,
 .reject-button:hover {
   opacity: 0.8;
+}
+
+
+.conversation-setup {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f4f4f8;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  margin: 20px auto;
+  margin-top: 10%;
+}
+
+
+
+.conversation-setup .conversation-name-input {
+  width: 92%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.conversation-setup .department-select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+
+
+.conversation-setup .conversation-name-input:focus,
+.conversation-setup .department-select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.conversation-setup .department-select {
+  appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="%236a5acd" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center;
+  background-color: #fff;
+  padding-right: 30px;
+}
+
+.start-button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.start-button:disabled {
+  background-color: #b3b3cc;
+  cursor: not-allowed;
+}
+
+.start-button:not(:disabled):hover {
+  background-color: #007bff;
+}
+
+.start-button:focus {
+  outline: none;
 }

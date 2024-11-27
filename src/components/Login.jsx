@@ -24,7 +24,7 @@ function Login({ onLogin }) {
                 credentials: 'include'
             });
             if (response.ok) {
-                navigate('/chatbot');
+                navigate('/');
             } else {
                 const errorData = await response.text(); // Get the raw text to see the error
                 console.log('User is not authenticated:', errorData);
@@ -62,7 +62,7 @@ const handleLogin = async (e) => {
           setError('');
           alert("Login successful!");
           onLogin();
-          navigate('/chatbot');
+          navigate('/');
       } else {
           setError(data.msg || 'Login failed');
       }
