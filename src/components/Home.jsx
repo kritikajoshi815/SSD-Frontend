@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Box, Drawer, List, ListItem, ListItemText,ListItemIcon, Typography, TextField, Button, Grid, Card, CardContent, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -8,8 +8,13 @@ import HistoryIcon from '@mui/icons-material/History';
 import InfoIcon from '@mui/icons-material/Info';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 
-const Home = ({ userRole = 'User',onLogout }) => {
+const Home = ({ onLogout }) => {
+  
+  const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userRole, setUserRole]  = useState("");
   const [searchTerm, setSearchTerm] = useState('');
   const [filters] = useState(['Bar Chart', 'Profit/Loss Report', 'Revenue Summary']); // Static filters for now
   const [cards, setCards] = useState([
@@ -26,6 +31,32 @@ const Home = ({ userRole = 'User',onLogout }) => {
       summary: 'Technical details about server setup.',
     },
   ]);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:6001/api/isAuth', {
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const userSession = await response.json();
+          //console.log(userSession);
+          setUserEmail(userSession.email);
+          setUserName(userSession.name);
+          setUserRole(userSession.role);
+          return;
+        } else {
+          const errorData = await response.text(); 
+          console.log('User is not authenticated:', errorData);
+        }
+      } catch (error) {
+        console.log(error);
+        setError('An error occurred during Authentication');
+      }
+    }
+    checkAuth();
+  }, []);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -64,7 +95,13 @@ const Home = ({ userRole = 'User',onLogout }) => {
           Elicitation Tool
         </Typography>
         <List sx={{ paddingTop: 2 }}>
-          {userRole === 'Admin' && (
+        <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }}>
+            <ListItemIcon sx={{ color: '#b3b3cc' }}>
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Home Page" />
+          </ListItem>
+          {userRole === 'admin' && (
             <>
               <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }}>
                 <ListItemIcon sx={{ color: '#b3b3cc' }}>
@@ -74,7 +111,7 @@ const Home = ({ userRole = 'User',onLogout }) => {
               </ListItem>
               <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }}>
                 <ListItemIcon sx={{ color: '#b3b3cc' }}>
-                  <AssignmentIcon />
+                  <EditNoteIcon />
                 </ListItemIcon>
                 <ListItemText primary="Update Meta Model" />
               </ListItem>
@@ -86,12 +123,7 @@ const Home = ({ userRole = 'User',onLogout }) => {
             </ListItemIcon>
             <ListItemText primary="New Conversation" />
           </ListItem>
-          <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }}>
-            <ListItemIcon sx={{ color: '#b3b3cc' }}>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home Page" />
-          </ListItem>
+          
           <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }}>
             <ListItemIcon sx={{ color: '#b3b3cc' }}>
               <HistoryIcon />

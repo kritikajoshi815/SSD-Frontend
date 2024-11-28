@@ -60,7 +60,7 @@ const handleLogin = async (e) => {
 
       if (response.ok) {
           setError('');
-          alert("Login successful!");
+          //alert("Login successful!");
           onLogin();
           navigate('/');
       } else {

@@ -52,7 +52,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={isAuthenticated?<Home onLogout={handleLogin}/>:<Login onLogin={handleLogin}/>} />
+        <Route path="/" element={isAuthenticated?<Home onLogout={handleLogout}/>:<Login onLogin={handleLogin}/>} />
         <Route path="/chatbot" element={<ChatBot />} />
         <Route path="/metamodel" element={<MetaModel />} />
       </Routes>

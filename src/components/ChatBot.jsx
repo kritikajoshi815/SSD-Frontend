@@ -7,8 +7,8 @@ const departments = [
 ];
 
 const ChatBot = () => {
-  const [userEmail, setuserEmail] = useState("");
-  const [userName, setuserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState("");
   const navigate = useNavigate();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -31,8 +31,8 @@ const ChatBot = () => {
         if (response.ok) {
           const userSession = await response.json();
           //console.log(userSession);
-          setuserEmail(userSession.email);
-          setuserName(userSession.name);
+          setUserEmail(userSession.email);
+          setUserName(userSession.name);
           return;
         } else {
           const errorData = await response.text(); // Get the raw text to see the error
@@ -290,7 +290,7 @@ const typewriterEffect = (text) => {
         </ul>
 
         <button onClick={saveConversation} className="save-button">
-          Save Conversation
+          Back to Home
         </button>
       </div>
 
