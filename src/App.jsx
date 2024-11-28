@@ -4,6 +4,7 @@ import ChatBot from "./components/ChatBot";
 import MetaModel from "./components/MetaModel";
 import React, { useState, useEffect } from 'react';
 import Home from "./components/Home";
+import ChatInterface from "./components/ChatInterface";
 // import Login from "./components/Login";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -54,6 +55,7 @@ function App() {
       <Routes>
         <Route path="/" element={isAuthenticated?<Home onLogout={handleLogout}/>:<Login onLogin={handleLogin}/>} />
         <Route path="/chatbot" element={<ChatBot />} />
+        <Route path="/chatInterface" element={<ChatInterface/>}/>
         <Route path="/metamodel" element={<MetaModel />} />
       </Routes>
     </BrowserRouter>

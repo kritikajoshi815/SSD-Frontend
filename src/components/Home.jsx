@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Box, Drawer, List, ListItem, ListItemText,ListItemIcon, Typography, TextField, Button, Grid, Card, CardContent, IconButton, FormControl,InputLabel, Select, MenuItem,} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import HomeIcon from '@mui/icons-material/Home';
@@ -55,6 +56,7 @@ const Home = ({ onLogout }) => {
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole]  = useState("");
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
   //const [filters] = useState(['Bar Chart', 'Profit/Loss Report', 'Revenue Summary']); // Static filters for now
   const [filterVisible, setFilterVisible] = useState(false);
 
@@ -302,6 +304,14 @@ const Home = ({ onLogout }) => {
     );
   });
 
+  const goToHome = ()=>{
+    navigate("/");
+  }
+
+  const goToChatInterface = (startConvo) => {
+    navigate("/chatInterface", { state: { startConvo } }); // Passing startConvo as state
+  };
+
   return (
     <Box
       sx={{
@@ -340,7 +350,7 @@ const Home = ({ onLogout }) => {
           Elicitation Tool
         </Typography>
         <List sx={{ paddingTop: 2 }}>
-        <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }}>
+        <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }} onClick={goToHome}>
             <ListItemIcon sx={{ color: '#b3b3cc' }}>
               <HomeIcon />
             </ListItemIcon>
@@ -362,14 +372,14 @@ const Home = ({ onLogout }) => {
               </ListItem>
             </>
           )}
-          <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }}>
+          <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }} onClick={() => goToChatInterface(true)}>
             <ListItemIcon sx={{ color: '#b3b3cc' }}>
               <ChatIcon />
             </ListItemIcon>
             <ListItemText primary="New Conversation" />
           </ListItem>
           
-          <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }}>
+          <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }} onClick={() => goToChatInterface(false)}>
             <ListItemIcon sx={{ color: '#b3b3cc' }}>
               <HistoryIcon />
             </ListItemIcon>
