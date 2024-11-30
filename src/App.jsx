@@ -5,6 +5,7 @@ import MetaModel from "./components/MetaModel";
 import React, { useState, useEffect } from 'react';
 import Home from "./components/Home";
 import ChatInterface from "./components/ChatInterface";
+import AdminHome from "./components/Admit_Home";
 // import Login from "./components/Login";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

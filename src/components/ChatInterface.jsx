@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate,useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import "../css/chatbot.css";
 import {
     Accordion,
@@ -60,37 +60,6 @@ const ChatInterface = () => {
 
 
     useEffect(() => {
-        const loadPrevConversations = async () => {
-            if (!userEmail) return; // Wait until userEmail is set
-
-            try {
-                const response = await fetch(
-                    `http://localhost:6001/api/prevChats?userEmail=${encodeURIComponent(userEmail)}`,
-                    {
-                        method: "GET",
-                        credentials: "include",
-                    }
-                );
-
-                if (response.ok) {
-                    const previousChats = await response.json();
-                    const chats = previousChats.map(chat => ({
-                        id: chat._id,
-                        name: chat.logName,
-                        userEmail: chat.userEmail,
-                        department: chat.metaModelName,
-                        status: "Not Sent", // Initialize with 'Not Sent' status
-                    }));
-                    setConversations(chats);
-                    setIsStartingConversation(startConvo);
-                    // Here you can set previous chats into your state if needed, e.g., setPrevChats(previousChats);
-                } else {
-                    console.log("Failed to load previous chats");
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        };
 
         loadPrevConversations();
     }, [userEmail]);
@@ -112,6 +81,41 @@ const ChatInterface = () => {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [messages, isTyping]); // Include `isTyping` to account for the loading state
+
+
+    const loadPrevConversations = async () => {
+        if (!userEmail) return; // Wait until userEmail is set
+
+        try {
+            const response = await fetch(
+                `http://localhost:6001/api/prevChats?userEmail=${encodeURIComponent(userEmail)}`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                }
+            );
+
+            if (response.ok) {
+                const previousChats = await response.json();
+                const chats = previousChats.map(chat => ({
+                    id: chat._id,
+                    name: chat.logName,
+                    userEmail: chat.userEmail,
+                    department: chat.metaModelName,
+                    status: chat.status,
+                    summary: chat.summary,
+                    comments: chat.latestComment // Initialize with 'Not Sent' status
+                }));
+                setConversations(chats);
+                setIsStartingConversation(startConvo);
+                // Here you can set previous chats into your state if needed, e.g., setPrevChats(previousChats);
+            } else {
+                console.log("Failed to load previous chats");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     // Typewriter effect for responses
     const typewriterEffect = (text) => {
@@ -202,9 +206,11 @@ const ChatInterface = () => {
                     status: "Not Sent",
                 };
                 setConversations((prevConversations) => [
-                    ...prevConversations,
-                    newConvo,
-                ]);
+                    newConvo, ...prevConversations,
+
+                ]); const newIndex = 0; // New conversation is added at the beginning of the array
+                setExpanded(newIndex); // Ensure the accordion is expanded for the new conversation
+                setSelectedConversation(newConvo);
                 setIsStartingConversation(false);
             }
             else {
@@ -220,26 +226,6 @@ const ChatInterface = () => {
         setDepartment("");
         setMessages([]);
         setIsStartingConversation(true); // Show the conversation setup form
-    };
-
-    const saveConversation = () => {
-        if (conversationName.trim() && department) {
-            const newConversation = {
-                name: conversationName,
-                department,
-                messages,
-                status: "Not Sent", // Initialize with 'Not Sent' status
-                summary: "", // To hold the conversation summary
-            };
-
-            setConversations((prevConversations) => [
-                ...prevConversations,
-                newConversation,
-            ]);
-            setIsStartingConversation(false);
-            // setConversationName("");
-            // setMessages([]); // Start a fresh conversation
-        }
     };
 
     const loadConversation = async (index) => {
@@ -300,11 +286,41 @@ const ChatInterface = () => {
         }
     };
 
+    const sendSummary = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:6001/api/createReportRequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    logName: conversationName, userEmail, metaModelName: department
+                }),
+            });
+
+            // Check if the response status indicates an error
+            if (!response.ok) {
+                const errorData = await response.json(); // Parse the error message
+                alert(errorData.message || "An error occurred");
+                return; // Exit the function if there's an error
+            }
+            const data = await response.json();
+            console.log(data.apiResponse);
+            alert("Summary Sent Successfully");
+            loadPrevConversations();
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (<div className="chatbot-app">
         {/* Side Panel for Conversations */}
         <div className="side-panel">
             <h3 className="sideHeading">Conversations</h3>
-            <button onClick={startNewConversation} className="save-button">
+            <button onClick={(e) => { e.preventDefault(); startNewConversation(); }} className="save-button">
                 New Conversation
             </button>
             <ul className="conversation-list" style={{ listStyleType: "none", padding: 0 }}>
@@ -439,7 +455,7 @@ const ChatInterface = () => {
                         </form>
 
                         <div className="summary-actions">
-                            <button onClick={generateSummary} className="summary-button">
+                            <button onClick={sendSummary} className="summary-button">
                                 Send Summary
                             </button>
                             {/* <button

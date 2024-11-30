@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react';
-import { Box, Drawer, List, ListItem, ListItemText,ListItemIcon, Typography, TextField, Button, Grid, Card, CardContent, IconButton, FormControl,InputLabel, Select, MenuItem,} from '@mui/material';
+import { Box, Drawer, List, ListItem, ListItemText,ListItemIcon, Typography, TextField, Button, Grid, Card, CardContent, IconButton, FormControl,InputLabel, Select, MenuItem,Dialog, DialogActions, DialogContent} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -10,45 +11,9 @@ import InfoIcon from '@mui/icons-material/Info';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import MetaModel from "./MetaModel";
+import ReportRequest from './ReportRequest';
 
-const cards = [
-  {
-    chatLogName: "Log 1",
-    department: "Finance and Accounting",
-    askedBy: "Sushma",
-    summary: "Summary of the finance report generation process.",
-    type: "Profit and Loss Statement",
-    visualizationType: "Line Graph",
-    timeRange: "Yearly",
-  },
-  {
-    chatLogName: "Log 2",
-    department: "Information Technology (IT)",
-    askedBy: "Priya",
-    summary: "Technical details about server setup.",
-    type: "System Uptime and Downtime Report",
-    visualizationType: "Line Graph",
-    timeRange: "Monthly",
-  },
-  {
-    chatLogName: "Log 3",
-    department: "Sales and Marketing",
-    askedBy: "Rahul",
-    summary: "Overview of the market share",
-    type: "Market Share",
-    visualizationType: "Heatmap",
-    timeRange: "Monthly",
-  },
-  {
-    chatLogName: "Log 4",
-    department: "Sales and Marketing",
-    askedBy: "Rahul",
-    summary: "Overview of the effectiveness",
-    type: "Campaign Effectiveness",
-    visualizationType: "Bar Chart",
-    timeRange: "Weekly",
-  },
-];
 
 
 const Home = ({ onLogout }) => {
@@ -59,11 +24,22 @@ const Home = ({ onLogout }) => {
   const navigate = useNavigate();
   //const [filters] = useState(['Bar Chart', 'Profit/Loss Report', 'Revenue Summary']); // Static filters for now
   const [filterVisible, setFilterVisible] = useState(false);
-
+  const [metaModelUpdate,setMetaModelUpdate] = useState(false);
+  const [requestReceived, setRequestReceived] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedReportType, setSelectedReportType] = useState("");
   const [selectedVisType, setSelectedVisType] = useState(""); // Chart type state
   const [selectedTimeRange, setSelectedTimeRange] = useState("");
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [openDialog, setOpenDialog] = useState(false); // State to control Dialog visibility
+  const [selectedConversation, setSelectedConversation] = useState(null); // State to store the selected conversation
+  const [messages, setMessages] = useState([]); // State to store the conversation messages
+  const [conversationName, setConversationName] = useState('');
+  const [department, setDepartment] = useState('');
+  const [isStartingConversation, setIsStartingConversation] = useState(false);
+
 
   const departments = [
     "Underwriting",
@@ -246,6 +222,34 @@ const Home = ({ onLogout }) => {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const response = await fetch("http://localhost:6001/api/getAllReports", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to fetch reports");
+        }
+
+        const data = await response.json();
+        setReports(data.reports);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchReports();
+  }, []);
+
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     // Add logic to filter cards dynamically based on search term.
@@ -272,11 +276,49 @@ const Home = ({ onLogout }) => {
     setFilterVisible((prev) => !prev);
   };
 
-  const filteredCards = cards.filter((card) => {
+  // Function to load the conversation from the API
+  const loadConversation = async (index) => {
+    setIsStartingConversation(false);
+    const conversation = reports[index]; // Adjusted to use reports instead of conversations array
+    setSelectedConversation(index);
+    setConversationName(conversation.chatLogName);
+    setDepartment(conversation.department);
+
+    try {
+      const response = await fetch(`http://localhost:6001/api/chatHistory/${conversation.conversationHistory._id}`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const chatHistory = await response.json();
+        setMessages(chatHistory); // Assuming `setMessages` is used to display the chat history
+      } else {
+        console.log("Failed to load chat history");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Handle open dialog and set selected conversation
+  const handleViewConversation = (index) => {
+    loadConversation(index); // Call loadConversation to fetch chat history
+    setOpenDialog(true); // Open dialog
+  };
+
+  // Close the dialog
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setMessages([]); // Clear messages when dialog is closed
+  };
+
+
+  const filteredReports = reports.filter((card) => {
     const matchesSearch =
-      card.chatLogName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      card.conversationHistory.logName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       card.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      card.askedBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      card.submittedBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
       card.summary.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesDepartment = selectedDepartment
@@ -284,11 +326,11 @@ const Home = ({ onLogout }) => {
       : true;
 
     const matchesReportType = selectedReportType
-      ? card.type === selectedReportType
+      ? card.reportType === selectedReportType
       : true;
 
     const matchesVisType = selectedVisType
-      ? card.visualizationType.toLowerCase() === selectedVisType.toLowerCase()
+      ? card.visualization.toLowerCase() === selectedVisType.toLowerCase()
       : true;
 
     const matchesTimeRange = selectedTimeRange
@@ -305,12 +347,25 @@ const Home = ({ onLogout }) => {
   });
 
   const goToHome = ()=>{
+    setMetaModelUpdate(false);
+    setRequestReceived(false);
     navigate("/");
   }
 
   const goToChatInterface = (startConvo) => {
     navigate("/chatInterface", { state: { startConvo } }); // Passing startConvo as state
   };
+
+  const goToMetaModelUpdate = ()=>{
+    setMetaModelUpdate(true);
+    setRequestReceived(false);
+  }
+
+  const goToRequest = ()=>{
+    setRequestReceived(true);
+    setMetaModelUpdate(false);
+  }
+
 
   return (
     <Box
@@ -340,7 +395,7 @@ const Home = ({ onLogout }) => {
         <Typography
           variant="h5"
           sx={{
-            color: '#007bff',
+            color: '#ffffff',
             padding: '16px',
             fontWeight: 'bold',
             textAlign: 'center',
@@ -358,13 +413,13 @@ const Home = ({ onLogout }) => {
           </ListItem>
           {userRole === 'admin' && (
             <>
-              <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }}>
+              <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }} onClick={goToRequest}>
                 <ListItemIcon sx={{ color: '#b3b3cc' }}>
                   <AssignmentIcon />
                 </ListItemIcon>
                 <ListItemText primary="Request Received" />
               </ListItem>
-              <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }}>
+              <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }} onClick={goToMetaModelUpdate}>
                 <ListItemIcon sx={{ color: '#b3b3cc' }}>
                   <EditNoteIcon />
                 </ListItemIcon>
@@ -413,8 +468,8 @@ const Home = ({ onLogout }) => {
         </Box>
       </Drawer>
       {/* Main Content */}
-      <Box sx={{ flex: 1, padding: 3, color: "#b3b3cc" }}>
-        <Typography variant="h4" sx={{ marginBottom: 2, color: "#007bff" }}>
+      {metaModelUpdate?(<MetaModel/>):requestReceived?(<ReportRequest />):(<Box sx={{ flex: 1, padding: 3, color: "#b3b3cc" }}>
+        <Typography variant="h4" sx={{ marginBottom: 2, color: "#ffffff" }}>
           Welcome to Conversation Elicitation Tool
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", marginBottom: 3 }}>
@@ -546,21 +601,21 @@ const Home = ({ onLogout }) => {
         )}
 
         {/* Cards Section */}
-        <Grid container spacing={2}>
-          {filteredCards.map((card, index) => (
+        <Grid container spacing={2} sx={{ maxHeight: 'calc(100vh - 150px)', overflowY: 'auto' }}>
+          {filteredReports.map((card, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card
                 sx={{ backgroundColor: "rgb(51, 50, 50)", color: "#b3b3cc" }}
               >
                 <CardContent>
-                  <Typography variant="h6" sx={{ color: "#007bff" }}>
-                    {card.chatLogName}
+                  <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                    {card.conversationHistory.logName}
                   </Typography>
                   <Typography>Department: {card.department}</Typography>
-                  <Typography>Asked By: {card.askedBy}</Typography>
-                  <Typography>Report Type: {card.type}</Typography>
+                  <Typography>Asked By: {card.conversationHistory.userEmail}</Typography>
+                  <Typography>Report Type: {card.reportType}</Typography>
                   <Typography>
-                    Visualization Type: {card.visualizationType}
+                    Visualization Type: {card.visualization}
                   </Typography>
                   <Typography>Time Range: {card.timeRange}</Typography>
                   <br></br>
@@ -569,6 +624,7 @@ const Home = ({ onLogout }) => {
                     variant="contained"
                     sx={{ backgroundColor: "#0056b3", marginTop: 2 }}
                     fullWidth
+                    onClick={() => handleViewConversation(index)}
                   >
                     View Conversation
                   </Button>
@@ -577,7 +633,54 @@ const Home = ({ onLogout }) => {
             </Grid>
           ))}
         </Grid>
-      </Box>
+
+        {/* Dialog to show Conversation */}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogActions>
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={handleCloseDialog}
+            aria-label="close"
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              color: '#b3b3cc',
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogActions>
+        <DialogContent dividers>
+          {/* Render the conversation between user and model */}
+          {messages.length > 0 ? (
+            <div>
+              {messages.map((entry, index) => (
+                <div key={index}>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                    {entry.role === 'user' ? 'User' : 'Model'}:
+                  </Typography>
+                  {entry.parts.map((part, partIndex) => (
+                    <Typography variant="body2" key={partIndex}>
+                      {part.text}
+                    </Typography>
+                  ))}
+                  <br />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <Typography>No conversation data available.</Typography>
+          )}
+        </DialogContent>
+      </Dialog>
+      </Box>)}
     </Box>
   );
 };
