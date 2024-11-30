@@ -3,6 +3,7 @@ import Login from "./components/Login";
 import MetaModel from "./components/MetaModel";
 import React, { useState, useEffect } from 'react';
 import Home from "./components/Home";
+import ChatInterface from "./components/ChatInterface";
 // import Login from "./components/Login";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

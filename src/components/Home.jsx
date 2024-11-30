@@ -13,6 +13,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import MetaModel from "./MetaModel";
 import ReportRequest from './ReportRequest';
+import AboutUs from './AboutUs';
 
 
 
@@ -26,6 +27,7 @@ const Home = ({ onLogout }) => {
   const [filterVisible, setFilterVisible] = useState(false);
   const [metaModelUpdate,setMetaModelUpdate] = useState(false);
   const [requestReceived, setRequestReceived] = useState(false);
+  const [aboutUs, setAboutUs] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedReportType, setSelectedReportType] = useState("");
   const [selectedVisType, setSelectedVisType] = useState(""); // Chart type state
@@ -359,11 +361,19 @@ const Home = ({ onLogout }) => {
   const goToMetaModelUpdate = ()=>{
     setMetaModelUpdate(true);
     setRequestReceived(false);
+    setAboutUs(false);
   }
 
   const goToRequest = ()=>{
     setRequestReceived(true);
     setMetaModelUpdate(false);
+    setAboutUs(false);
+  }
+
+  const goToAboutUs = ()=>{
+    setRequestReceived(false);
+    setMetaModelUpdate(false);
+    setAboutUs(true);
   }
 
 
@@ -440,7 +450,7 @@ const Home = ({ onLogout }) => {
             </ListItemIcon>
             <ListItemText primary="My ChatLogHistory" />
           </ListItem>
-          <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }}>
+          <ListItem button sx={{ ':hover': { backgroundColor: 'rgb(75, 72, 72)' } }} onClick={goToAboutUs}>
             <ListItemIcon sx={{ color: '#b3b3cc' }}>
               <InfoIcon />
             </ListItemIcon>
@@ -468,7 +478,7 @@ const Home = ({ onLogout }) => {
         </Box>
       </Drawer>
       {/* Main Content */}
-      {metaModelUpdate?(<MetaModel/>):requestReceived?(<ReportRequest />):(<Box sx={{ flex: 1, padding: 3, color: "#b3b3cc" }}>
+      {metaModelUpdate?(<MetaModel/>):requestReceived?(<ReportRequest />):aboutUs?(<AboutUs/>):(<Box sx={{ flex: 1, padding: 3, color: "#b3b3cc" }}>
         <Typography variant="h4" sx={{ marginBottom: 2, color: "#ffffff" }}>
           Welcome to Conversation Elicitation Tool
         </Typography>
