@@ -3,7 +3,6 @@ import Login from "./components/Login";
 import MetaModel from "./components/MetaModel";
 import React, { useState, useEffect } from 'react';
 import Home from "./components/Home";
-import ChatInterface from "./components/ChatInterface";
 // import Login from "./components/Login";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -37,9 +36,10 @@ function App() {
   };
 
   const handleLogout = () => {
-    fetch('http://localhost:6001/api/logout', {
-      method: 'GET',
-      credentials: 'include',
+
+    fetch("http://localhost:6001/api/logout", {
+      method: "GET",
+      credentials: "include",
     })
       .then(() => {
         setIsAuthenticated(false);

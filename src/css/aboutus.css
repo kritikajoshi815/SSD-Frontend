@@ -1,0 +1,142 @@
+.about-us {
+  font-family: Arial, sans-serif;
+  margin-bottom: 0px;
+  margin: 20px;
+  overflow-y: auto;
+  max-height: 100vh; /* Ensure the page content is scrollable within the viewport */
+  padding: 10px;
+}
+.about-header {
+  background-color: #007bff; /* Set background color */
+  color: #fff; /* White text for contrast */
+  padding: 10px 15px; /* Reduced padding for a smaller header */
+  text-align: center; /* Center-align the content */
+  border-radius: 8px; /* Rounded corners */
+  margin-bottom: 0px; /* Reduced space below the header */
+}
+
+.about-header h1 {
+  font-size: 2rem; /* Slightly smaller font size for the title */
+  margin-bottom: 10px; /* Reduced space below the title */
+  font-weight: bold; /* Bold font for emphasis */
+}
+
+.about-header p {
+  font-size: 1rem; /* Reduced font size for the paragraph */
+  line-height: 1.5; /* Slightly smaller line height */
+  max-width: 600px; /* Limit width for better text wrapping */
+  margin: 0 auto; /* Center the paragraph */
+  padding: 0 15px; /* Padding inside the paragraph */
+}
+
+.about-header strong {
+  color: #ffcc00; /* Highlight important words in yellow */
+}
+
+/* .about-project {
+  margin-bottom: 20px;
+} */
+.team-section {
+  margin-bottom: 80px;
+}
+/* 
+.about-project p {
+  font-size: 16px;
+  line-height: 1.5;
+} */
+
+.team-section {
+  text-align: center;
+  max-height: 400px; /* Adjust the height of the team section */
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin-top: 0px;
+}
+
+.team-members {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-height: 100%; /* Limit the container height */
+  overflow-y: auto; /* Scrollable team members */
+}
+
+.team-member {
+  width: 200px; /* Set a fixed width for each member card */
+  height: 100px; /* Set a fixed height for each card */
+  background-color: rgb(29, 29, 29);
+  color: white;
+  border-radius: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 30px;
+  padding-top: 10px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feature {
+  color: white;
+  background-color: rgb(29, 29, 29);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.feature h3 {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+}
+
+.feature ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.feature li {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.feature li strong {
+  color: #007bff;
+  font-weight: bold;
+}
+
+/* Optional Hover Effect */
+/* .feature li:hover {
+  background-color: #f0f8ff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+} */
+
+/* .team-member-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+} */
+
+/* Optional: Styling the Scrollbar */
+.about-us::-webkit-scrollbar,
+.team-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.about-us::-webkit-scrollbar-thumb,
+.team-section::-webkit-scrollbar-thumb {
+  background-color: #007bff;
+  border-radius: 4px;
+}
+
+.about-us::-webkit-scrollbar-track,
+.team-section::-webkit-scrollbar-track {
+  background-color: black;
+}
